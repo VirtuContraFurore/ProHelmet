@@ -1,0 +1,99 @@
+CPU mySystem {
+
+  OS myOs {
+    EE_OPT = "OS_EE_APPL_BUILD_DEBUG";
+    EE_OPT = "OS_EE_BUILD_DEBUG";
+    CFLAGS = "-DERIKA";
+/* CFLAGS = "-DDATA_IN_ExtSDRAM";*/
+
+    CPU_DATA = CORTEX_M {
+      MODEL = M4F;	/* FPU Support */
+      MULTI_STACK = TRUE;
+      CPU_CLOCK = 180.00;
+      COMPILER = GCC {
+        VERSION = "9.3.1";
+      };
+      
+      IDLEHOOK = TRUE {
+      	HOOKNAME = "idle";
+      };
+      
+    };
+    
+    KERNEL_TYPE = OSEK {
+      CLASS = BCC1;
+    };
+
+    LDFLAGS="-specs=nano.specs -specs=nosys.specs";
+
+    MCU_DATA = STM32F4 {
+      MODEL = STM32F429XX;
+    };
+
+    BOARD_DATA = STM32F429I_DISC1;
+
+    LIB = STM32_CUBE_F4 {
+      BOARD = STM32F429I_DISC1;
+      VERSION = "1.25.0";
+      STAND_ALONE = TRUE;
+    };
+    
+  };
+  
+  TASK ViewBoot {
+  	PRIORITY = 1;
+  	STACK = PRIVATE {
+  		SIZE = 1024;	
+  	};
+  	APP_SRC = "ViewBoot.c";
+  };
+
+
+  /* All the source files are listed here */
+  
+  APPDATA myApp {
+  	APP_SRC = "main.c";
+    APP_SRC = "system.c";
+    APP_SRC = "driver/oled.c";
+    APP_SRC = "driver/graphics.c";
+    APP_SRC = "driver/bluetooth.c";
+    APP_SRC = "driver/bluetooth_endpoints.c";
+    APP_SRC = "driver/gy80.c";
+    APP_SRC = "driver/bmp085.c";
+    APP_SRC = "driver/adxl345.c";
+    APP_SRC = "driver/l3g4200d.c";
+  };
+  
+  /* ISR definition ****************** */
+  
+  ISR Button2ISR {
+    CATEGORY = 1;
+    SOURCE   = "EXTI2";
+    PRIORITY = 1;
+  };
+  
+  ISR Button3ISR {
+    CATEGORY = 1;
+    SOURCE   = "EXTI3";
+    PRIORITY = 1;
+  };
+  
+  ISR Button4ISR {
+    CATEGORY = 1;
+    SOURCE   = "EXTI4";
+    PRIORITY = 1;
+  };
+  
+  ISR SysTimerISR{
+  	CATEGORY = 2;
+  	SOURCE = "SysTick";
+  	PRIORITY = 2;
+  };
+  
+  ISR Usart2ISR {
+  	CATEGORY = 1;
+  	SOURCE = "USART2";
+  	PRIORITY = 4;
+  };
+
+};
