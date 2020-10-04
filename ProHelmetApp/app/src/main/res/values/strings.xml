@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ProHelmetApp</string>
+    <string name="prohelmet_alpha">ProHelmet, alpha v0.1</string>
+    <string name="connect_str">Connect!</string>
+    <string name="status_disconnected_str">Status: disconnected</string>
+    <string name="status_connected_str">Status: connected</string>
+    <string name="status_connecting_str">Status: connecting...</string>
+    <string name="status_failed_str">Status: connection failed</string>
+</resources>
