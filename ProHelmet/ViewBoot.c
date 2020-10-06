@@ -160,6 +160,7 @@ static void draw_boot_diagnostics(uint32_t duration_ms){
 			draw_str(pt_str);
 		}
 
+
 		if(elapsed > 2000){
 			if(EPCTL_PayloadReceived(Endpoint_Ping))
 				draw_str("BT ping received!");
