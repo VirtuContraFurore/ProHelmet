@@ -180,6 +180,7 @@ static void draw_boot_diagnostics(uint32_t duration_ms){
 			}
 		}
 
+
 		GR_DrawRect(screen, (Rect_t) {  5, 65, 150, 10}, Color_WHITE);
 		GR_FillRect(screen, (Rect_t) {  5+2, 65+2, ((150-4)*(SYS_time_millis - start)/VIEWBOOT_ms), 10-4}, Color_ORANGE);
 
