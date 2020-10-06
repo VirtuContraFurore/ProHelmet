@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.UUID;
 
@@ -107,10 +108,64 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    protected void setSpeed(double speed){
+        TextView connect_status = (TextView) findViewById(R.id.speed);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                DecimalFormat df = new DecimalFormat();
+                df.setMaximumFractionDigits(2);
+                df.setMaximumFractionDigits(2);
+                connect_status.setText("GPS: " + df.format(speed) + " km/h");
+            }
+        });
+    }
+
+    protected void setTestText(String text){
+        TextView connect_status = (TextView) findViewById(R.id.testview);
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                connect_status.setText(text);
+            }
+        });
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == REQUEST_ENABLE_BT && resultCode == -1)
             this.connectButtonOnClick(this.getCurrentFocus());
     }
 
+    public void buttonOnClick1(View view){
+        this.buttonCallback(1);
+    }
+
+    public void buttonOnClick2(View view){
+        this.buttonCallback(2);
+    }
+
+    public void buttonOnClick3(View view){
+        this.buttonCallback(3);
+    }
+
+    public void buttonOnClick4(View view){
+        this.buttonCallback(4);
+    }
+
+    public void buttonOnClick5(View view){
+        this.buttonCallback(5);
+    }
+
+    public void buttonOnClick6(View view){
+        this.buttonCallback(6);
+    }
+
+    private void buttonCallback(int id){
+        if(this.service != null && this.service.isAlive()){
+            this.service.buttonCallback(id);
+        } else {
+            this.showInfo("You need to be connected first");
+        }
+    }
 }

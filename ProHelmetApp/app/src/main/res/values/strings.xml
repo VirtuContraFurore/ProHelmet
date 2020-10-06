@@ -6,4 +6,7 @@
     <string name="status_connected_str">Status: connected</string>
     <string name="status_connecting_str">Status: connecting...</string>
     <string name="status_failed_str">Status: connection failed</string>
+    <string name="test_1">Test 1</string>
+    <string name="_0_0_km_h">GPS: 0.0 km/h</string>
+    <string name="textview">TextView</string>
 </resources>

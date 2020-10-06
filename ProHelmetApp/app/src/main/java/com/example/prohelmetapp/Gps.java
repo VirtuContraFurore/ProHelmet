@@ -41,18 +41,23 @@ public class Gps implements LocationListener {
         first = true;
 
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, Constants.GPS_MS, Constants.GPS_METERS, this);
-        manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Constants.GPS_MS, Constants.GPS_METERS, this);
+        //manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, Constants.GPS_MS, Constants.GPS_METERS, this);
 
     }
 
     private double lastLA, lastLO;
     private long lastT;
 
-    private double speed;
+    private volatile double speed;
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
         Log.d(Constants.LOG, "gps update");
+        synchronized (this.lock) {
+            this.speed = location.getSpeed()*3.6f;
+        }
+
+        /*
         if(first){
             lastLA = location.getLatitude();
             lastLO = location.getLongitude();
@@ -74,7 +79,7 @@ public class Gps implements LocationListener {
             synchronized (this.lock) {
                 this.speed = speed;
             }
-        }
+        }*/
     }
 
     public double getSpeed(){

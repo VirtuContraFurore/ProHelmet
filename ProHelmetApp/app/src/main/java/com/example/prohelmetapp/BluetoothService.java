@@ -62,7 +62,7 @@ public class BluetoothService extends Thread {
             long time = System.currentTimeMillis();
             while(System.currentTimeMillis() - time < 500);
             synchronized (gps.lock) {
-                Log.d(Constants.LOG, "Speed:" + gps.getSpeed());
+                context.setSpeed(gps.getSpeed());
             }
         }
     }
@@ -119,6 +119,12 @@ public class BluetoothService extends Thread {
         }
 
         return true;
+    }
+
+    int cnt = 0;
+
+    public void buttonCallback(int id){
+        this.context.setTestText("Pressed button id:" + id + ", "+ ++cnt + " times.");
     }
 
 }
