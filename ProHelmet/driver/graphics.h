@@ -160,6 +160,11 @@ void GR_DrawLine(OLED_data_t * screen, Point_t p1, Point_t p2, Color_t color);
 void GR_DrawString(OLED_data_t * screen, Point_t pos, char* string, const struct Font* font, Color_t c);
 
 /*
+ * Draw a string using a font.
+ */
+void GR_DrawString_noWrap(OLED_data_t * screen, Point_t pos, char* string, const struct Font* font, Color_t c);
+
+/*
  * Draw a number using a font.
  * digits is the number spacing
  */

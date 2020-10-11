@@ -62,7 +62,7 @@ void EP_dataReceivedCallback(uint8_t data){
 			}
 
 		if(active == 0){
-			uint8_t cmd[2] = {EP_CTL_EP_NOTEXISTS, 0};
+			uint8_t cmd[2] = {EP_CTL_EP_NOTEXISTS, data};
 			BT_sendData(cmd, 2);
 			return;
 		}

@@ -256,6 +256,8 @@ ISR2(SysTimerISR){
 	SYS_time_millis++;
 	/* Check debounce logic */
 	SYS_SideButtonsDebounce();
+	/* Advance erika's System Timer */
+	IncrementCounter(SystemTimer);
 	/* Execute the hook if needed */
 	if(SYS_SysTimer_callback)
 		(*SYS_SysTimer_callback)();

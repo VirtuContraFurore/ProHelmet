@@ -14,18 +14,6 @@ static int16_t y;
 TASK(ViewBoot){
 	__PRINT_DEBUG_STR("Booting!\n");
 
-	SYS_InitGreenLed();
-	SYS_InitSysTimer();
-	SYS_InitSideButtons();
-	SYS_InitPhotores();
-	BT_Init(BT_BAUDRATE, BT_PARITY, BT_STOPBITS);
-	GY80_Init_i2c(400);
-	BMP085_Init();
-	ADXL345_Init();
-	L3G4200D_Init();
-
-	OLED_InitScreen(screen, OLED_SOUTH);
-
 	/* Ping Bluetooth */
 	EPCTL_RequestData(Endpoint_Ping);
 
@@ -38,7 +26,41 @@ TASK(ViewBoot){
 	draw_boot_diagnostics(VIEWBOOT_ms);
 
 	/* Accelerometer calibration */
-	draw_sensor_calib();
+	draw_sensor_calib(CALIB_ms);
+
+	draw_done(DONE_ms);
+}
+
+static void draw_done(time_ms_t duration_ms){
+	time_ms_t start = SYS_getTimeMillis();
+	while(1){
+		time_ms_t elapsed = SYS_getTimeMillis()-start;
+		float f = screen->width - screen->width*elapsed/duration_ms;
+
+		OLED_Clear(screen, Color_BLACK);
+		GR_DrawString_noWrap(screen, (Point_t) {4 + f, 5}, "Sensors", &font_ArialNarrow36px, Color_LIGHT_BLUE);
+		GR_DrawString_noWrap(screen, (Point_t) {4 - f, 40}, "Calibrated!", &font_ArialNarrow36px, Color_LIGHT_BLUE);
+		GR_SwapBuffers(screen);
+
+		if(elapsed >= duration_ms)
+			break;
+	}
+
+	__delay_ms(100);
+
+	OLED_Clear(screen, Color_BLACK);
+	GR_DrawString_noWrap(screen, (Point_t) {4, 5}, "Sensors", &font_ArialNarrow36px, Color_WHITE);
+	GR_DrawString_noWrap(screen, (Point_t) {4, 40}, "Calibrated!", &font_ArialNarrow36px, Color_WHITE);
+	GR_SwapBuffers(screen);
+
+	__delay_ms(200);
+
+	OLED_Clear(screen, Color_BLACK);
+	GR_DrawString_noWrap(screen, (Point_t) {4, 5}, "Sensors", &font_ArialNarrow36px, Color_LIGHT_BLUE);
+	GR_DrawString_noWrap(screen, (Point_t) {4, 40}, "Calibrated!", &font_ArialNarrow36px, Color_LIGHT_BLUE);
+	GR_SwapBuffers(screen);
+
+	__delay_ms(300);
 }
 
 static void draw_str(uint8_t * str){
@@ -46,18 +68,32 @@ static void draw_str(uint8_t * str){
 	y += font_MonoTypewriter12px.size;
 }
 
-static void draw_sensor_calib(){
+static void draw_sensor_calib(time_ms_t duration_ms){
 	time_ms_t start = SYS_getTimeMillis();
 
 	int32_t press, temp;
-	BMP085_Test(&temp, &press);
 	int16_t x1,y1,z1;
 	int16_t x2,y2,z2;
-	int64_t gcx=0, gcy=0, gcz=0;
-	int64_t acx=0, acy=0, acz=0;
 	int32_t ticks=0;
 
+	Sensor_startTasks();
+
 	while(1){
+
+		Sensor_accel_data_t accel = Sensor_getAccel();
+		x1 = accel.value.x;
+		y1 = accel.value.y;
+		z1 = accel.value.z;
+
+		Sensor_gyro_data_t gyro = Sensor_getGyro();
+		x2 = gyro.value.x;
+		y2 = gyro.value.y;
+		z2 = gyro.value.z;
+
+		Sensor_press_data_t pres = Sensor_getPress();
+		press = pres.press;
+		temp = pres.temp;
+
 		time_ms_t elapsed = SYS_getTimeMillis()-start;
 		y=0;
 		OLED_Clear(screen, Color_BLACK);
@@ -93,35 +129,16 @@ static void draw_sensor_calib(){
 		}
 
 		GR_DrawRect(screen, (Rect_t) {  5, 69, 150, 6}, Color_WHITE);
-		GR_FillRect(screen, (Rect_t) {  5+2, 69+2, ((150-4)*(ticks)/(CALIB_TICKS)), 6-4}, Color_PURPLE);
+		GR_FillRect(screen, (Rect_t) {  5+2, 69+2, ((150-4)*(SYS_time_millis - start)/duration_ms), 6-4}, Color_PURPLE);
 
-		OLED_SwapBuffers(screen);
+		GR_SwapBuffers(screen);
 
-		__delay_ms(15);
-		ADXL345_ReadAccel(&x1, &y1, &z1);
-		L3G4200D_ReadOmega(&x2, &y2, &z2);
-
-		if(ticks < CALIB_TICKS){
-			gcx+=x2;
-			gcy+=y2;
-			gcz+=z2;
-			acx+=x1;
-			acy+=y1;
-			acz+=z1;
-			ticks++;
-		} else {
-			x2 -= gcx/ticks;
-			y2 -= gcy/ticks;
-			z2 -= gcz/ticks;
-			x1 -= acx/ticks;
-			y1 -= acy/ticks;
-			z1 -= acz/ticks;
-		}
-
+		if(elapsed > duration_ms && accel.calibration_ongoing == 0)
+			break;
 	}
 }
 
-static void draw_boot_diagnostics(uint32_t duration_ms){
+static void draw_boot_diagnostics(time_ms_t duration_ms){
 	time_ms_t start = SYS_getTimeMillis();
 
 	while(1){
@@ -183,9 +200,9 @@ static void draw_boot_diagnostics(uint32_t duration_ms){
 
 
 		GR_DrawRect(screen, (Rect_t) {  5, 65, 150, 10}, Color_WHITE);
-		GR_FillRect(screen, (Rect_t) {  5+2, 65+2, ((150-4)*(SYS_time_millis - start)/VIEWBOOT_ms), 10-4}, Color_ORANGE);
+		GR_FillRect(screen, (Rect_t) {  5+2, 65+2, ((150-4)*(SYS_time_millis - start)/duration_ms), 10-4}, Color_ORANGE);
 
-		OLED_SwapBuffers(screen);
+		GR_SwapBuffers(screen);
 
 		if(elapsed > duration_ms)
 			break;

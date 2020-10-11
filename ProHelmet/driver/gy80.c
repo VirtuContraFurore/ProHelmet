@@ -22,6 +22,11 @@ static inline void i2c_wait_nBUSY();
 static inline void i2c_write(uint8_t data);
 static inline uint8_t i2c_read();
 
+/*
+ * Task structure
+ */
+static volatile GY80_SensorTask task;
+
 void GY80_Init_i2c(uint32_t freq_khz){
 	/* Setup I2C2 */
 	RCC->AHB1ENR |= RCC_AHB1ENR_GPIOBEN;
@@ -44,6 +49,9 @@ void GY80_Init_i2c(uint32_t freq_khz){
 	I2C2->CR1 = I2C_CR1_PE;
 	I2C2->CR2 = 45 << I2C_CR2_FREQ_Pos;
 	I2C2->CCR = 500 * SYS_CLK_APB1_Mhz / freq_khz;
+
+	task.state = finish;
+
 }
 
 void GY80_SendByte(uint8_t addr, uint8_t data){
@@ -186,3 +194,25 @@ static inline void i2c_write(uint8_t data){
 static inline uint8_t i2c_read(){
 	return I2C2->DR;
 }
+
+int GY80_StartTask(uint8_t addr, uint8_t reg, int8_t size, volatile uint8_t * data){
+	if(task.state != finish)
+		return 0;
+
+	if(size > GY80_TASK_MAX_PAYLOAD)
+		size = GY80_TASK_MAX_PAYLOAD;
+
+	task.addr = addr;
+	task.reg = reg;
+	task.size = size;
+	task.data = data;
+
+	return 1;
+}
+
+///*
+// * I2C interrupts
+// */
+//ISR1(I2c2ISR){
+//
+//}

@@ -40,29 +40,85 @@ CPU mySystem {
     
   };
   
+  COUNTER SystemTimer {
+    MINCYCLE = 1;
+    MAXALLOWEDVALUE = 0xFFFFFFFF;
+    TICKSPERBASE = 1;
+    TYPE = SOFTWARE;
+    SECONDSPERTICK = 0.001;
+  };
+  
+  /* Resource declarations */
+  
+  RESOURCE Res_I2c2;
+  RESOURCE Res_AccelData;
+  RESOURCE Res_GyroData;
+  RESOURCE Res_PressData;
+  
+  /* Alarms declarations */
+  
+  ALARM AccelAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = AccelSensor; };
+  	AUTOSTART = FALSE;
+  };
+  
+  ALARM GyroAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = GyroSensor; };
+  	AUTOSTART = FALSE;
+  };
+  
+  ALARM PressAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = PressSensor; };
+  	AUTOSTART = FALSE;
+  };
+  
+  ALARM LightAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = LightSensor; };
+  	AUTOSTART = FALSE;
+  };
+  
+  /* Task definitions */
+  
+  TASK AccelSensor {
+  	PRIORITY = 10;
+  	STACK = SHARED;
+  	RESOURCE = Res_I2c2;
+  	RESOURCE = Res_AccelData;
+  };
+  
+  TASK GyroSensor {
+  	PRIORITY = 9;
+  	STACK = SHARED;
+  	RESOURCE = Res_I2c2;
+  	RESOURCE = Res_GyroData;
+  };
+  
+  TASK LightSensor {
+  	PRIORITY = 8;
+  	STACK = SHARED;
+  };
+  
+  TASK PressSensor {
+  	PRIORITY = 7;
+  	STACK = SHARED;
+  	RESOURCE = Res_I2c2;
+  	RESOURCE = Res_PressData;
+  };
+  
   TASK ViewBoot {
   	PRIORITY = 1;
-  	STACK = PRIVATE {
-  		SIZE = 1024;	
-  	};
+  	STACK = SHARED;
   	APP_SRC = "ViewBoot.c";
+  	RESOURCE = Res_I2c2;
+  	RESOURCE = Res_AccelData;
+  	RESOURCE = Res_GyroData;
+  	RESOURCE = Res_PressData;
   };
-
-
-  /* All the source files are listed here */
   
-  APPDATA myApp {
-  	APP_SRC = "main.c";
-    APP_SRC = "system.c";
-    APP_SRC = "driver/oled.c";
-    APP_SRC = "driver/graphics.c";
-    APP_SRC = "driver/bluetooth.c";
-    APP_SRC = "driver/bluetooth_endpoints.c";
-    APP_SRC = "driver/gy80.c";
-    APP_SRC = "driver/bmp085.c";
-    APP_SRC = "driver/adxl345.c";
-    APP_SRC = "driver/l3g4200d.c";
-  };
   
   /* ISR definition ****************** */
   
@@ -95,5 +151,23 @@ CPU mySystem {
   	SOURCE = "USART2";
   	PRIORITY = 4;
   };
+  
+  
+  /* All the source files are listed here */
+  
+  APPDATA myApp {
+  	APP_SRC = "main.c";
+    APP_SRC = "system.c";
+    APP_SRC = "driver/oled.c";
+    APP_SRC = "driver/graphics.c";
+    APP_SRC = "driver/bluetooth.c";
+    APP_SRC = "driver/bluetooth_endpoints.c";
+    APP_SRC = "driver/gy80.c";
+    APP_SRC = "driver/bmp085.c";
+    APP_SRC = "driver/adxl345.c";
+    APP_SRC = "driver/l3g4200d.c";
+    APP_SRC = "sensors.c";
+  };
 
+ 
 };

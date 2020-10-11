@@ -17,9 +17,11 @@
 
 #include "utils.h"
 #include "system.h"
+#include "sensors.h"
 
 #include "driver/oled.h"
 #include "driver/graphics.h"
+#include "driver/bluetooth.h"
 
 /*
  * Struttura del programma:
@@ -28,9 +30,11 @@
  * background task: ricevere notifiche
  * background task: mandare dati
  * background task: ricevere dati
- * background task: controllare la luminosità esterna
- * background task: controllare la pressione esterna
  * background task: controllare che non siamo caduti e nel caso lanciare un SoS
+ * background task: check accelerometro
+ * background task: check giroscopio
+ * background task: check buttons
+ * background task: check pressure & temp
  * interrupt degli user buttons
  *
  * Usare le ALARMSs per i background, aggioranandole con l'ISR every ms
@@ -51,10 +55,10 @@
 OLED_data_t screen_data;
 OLED_data_t * screen;
 
-int main(){
-	screen = &screen_data;
-	SYS_InitSys();
+static void init();
 
+int main(){
+	init();
 	ActivateTask(ViewBoot);
 	StartOS(OSDEFAULTAPPMODE);
 	return 0;
@@ -67,4 +71,18 @@ void idle(){
 
 }
 
+static void init(){
+	screen = &screen_data;
 
+	SYS_InitSys();
+	SYS_InitGreenLed();
+	SYS_InitSysTimer();
+	SYS_InitSideButtons();
+	SYS_InitPhotores();
+
+	BT_Init(BT_BAUDRATE, BT_PARITY, BT_STOPBITS);
+
+	OLED_InitScreen(screen, OLED_SOUTH);
+
+	Sensor_init();
+}

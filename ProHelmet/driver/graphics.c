@@ -212,9 +212,35 @@ void GR_DrawString(OLED_data_t * screen, Point_t pos, char* string, const struct
     }
 }
 
+void GR_DrawString_noWrap(OLED_data_t * screen, Point_t pos, char* string, const struct Font* font, Color_t c){
+	int orig = pos.x;
+	int i = 0;
+    while(string[i] != '\0'){
+
+    	/* Manage space char */
+        if(string[i] == ' '){
+        	pos.x +=font->symbols[(int)'a'-33].width; /* Use the same width of 'a' character. */
+        	i++;
+        	continue;
+        }
+
+        int index = (int)string[i] - 33;
+
+        Rect_t rect = {.pos=pos, .w = font->symbols[index].width, .h = font->symbols[index].height};
+
+        GR_DrawChar(screen, rect, font->symbols[index].data, c);
+
+        pos.x += rect.w;
+        i++;
+    }
+}
+
 void GR_DrawChar(OLED_data_t * screen, Rect_t rect, const uint8_t * font, Color_t c){
 	for(int y = 0; y < rect.h; y++){
 		for(int x = 0; x < rect.w; x++){
+			if(!GR_IsVisibile(screen, (Point_t) {x+rect.pos.x, y+rect.pos.y}))
+				continue;
+
 			uint8_t alpha = font[y * rect.w + x];
 			if(alpha == 0)
 				continue;
