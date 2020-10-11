@@ -29,6 +29,8 @@ TASK(ViewBoot){
 	draw_sensor_calib(CALIB_ms);
 
 	draw_done(DONE_ms);
+
+	ChainTask(ViewSpeed);
 }
 
 static void draw_done(time_ms_t duration_ms){

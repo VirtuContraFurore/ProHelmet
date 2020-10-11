@@ -59,7 +59,7 @@
  */
 #define OLED_BACKLIGHT_MAX 		256
 #define OLED_BACKLIGHT_MIN		  0
-#define OLED_BACKLIGHT_OFF		  0
+#define OLED_BACKLIGHT_OFF		 10
 
 /*
  * Orientation of the screen.

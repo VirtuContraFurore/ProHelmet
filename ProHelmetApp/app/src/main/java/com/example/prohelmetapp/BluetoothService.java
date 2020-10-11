@@ -10,6 +10,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -191,6 +192,16 @@ public class BluetoothService extends Thread {
                     Toast.makeText(context, "Ping signal sent", Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        if(events.containsKey(Constants.EP_TIME) && events.get(Constants.EP_TIME) == Constants.EP_CTL_REQ_DATA){
+            byte msg[] = new byte[3];
+            msg[0] = Constants.EP_TIME;
+            msg[1] = (byte) Calendar.getInstance().get(Calendar.MINUTE);
+            msg[2] = (byte) Calendar.getInstance().get(Calendar.HOUR);
+
+            this.output.write(msg);
+            events.remove(Constants.EP_TIME);
         }
     }
 }

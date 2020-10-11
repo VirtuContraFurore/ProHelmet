@@ -35,7 +35,7 @@ typedef volatile BT_RxBuffer_t * const EP_const_ptr_t;
 
 /*** Endpoint extern declaration, must match *.c file ***********************/
 
-extern EP_const_ptr_t Endpoint_Ping, Endpoint_Speed;
+extern EP_const_ptr_t Endpoint_Ping, Endpoint_Speed, Endpoint_Time;
 extern EP_const_ptr_t const EP_RxEndpoints[];
 
 /*** EndPoint CTL functions *************************************************/

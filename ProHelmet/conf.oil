@@ -54,6 +54,7 @@ CPU mySystem {
   RESOURCE Res_AccelData;
   RESOURCE Res_GyroData;
   RESOURCE Res_PressData;
+  RESOURCE Res_TimeData;
   
   
   /* Alarms declarations ******************************/
@@ -79,6 +80,12 @@ CPU mySystem {
   ALARM LightAlarm {
   	COUNTER = SystemTimer;
   	ACTION = ACTIVATETASK{ TASK = LightSensor; };
+  	AUTOSTART = FALSE;
+  };
+  
+  ALARM TimeAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = IncrTime; };
   	AUTOSTART = FALSE;
   };
   
@@ -113,6 +120,13 @@ CPU mySystem {
   	RESOURCE = Res_PressData;
   };
   
+  TASK IncrTime {
+  	PRIORITY = 15;
+  	STACK = SHARED;
+  	RESOURCE = Res_TimeData;
+  	APP_SRC = "time.c";
+  };
+  
   /* main tasks */
   
   TASK ViewBoot {
@@ -130,6 +144,19 @@ CPU mySystem {
   	APP_SRC = "ViewSpeed.c";
   	RESOURCE = Res_AccelData;
   	RESOURCE = Res_GyroData;
+  	RESOURCE = Res_TimeData;
+  };
+  
+  TASK ViewNav {
+  	PRIORITY = 1;	
+  	STACK = SHARED;
+  	APP_SRC = "ViewNav.c";
+  };
+  
+  TASK ViewBrightness {
+  	PRIORITY = 1;	
+  	STACK = SHARED;
+  	APP_SRC = "ViewBrightness.c";
   };
   
   

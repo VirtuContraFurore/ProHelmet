@@ -286,6 +286,42 @@ void GR_DrawBitmap(OLED_data_t * screen, Point_t pos, struct Bitmap* bitmap){
 		}
 }
 
+void GR_DrawBitmapColorized(OLED_data_t * screen, Point_t pos, struct Bitmap* bitmap, Color_t color){
+	const uint8_t* alpha = bitmap->alpha;
+	int index = 0;
+	int mask = 0x0F;
+
+	for(int y = pos.y; y < pos.y+bitmap->height; y++)
+		for(int x = pos.x; x < pos.x+bitmap->width; x++){
+
+			if(GR_IsVisibile(screen, (Point_t) {x, y}) &&
+					(alpha==0 || (alpha[index] & mask))) {
+
+				uint8_t a = alpha[index] & mask;
+				if(mask == 0x0F)
+					a <<= 4;
+
+				Color_t fg = color;
+				Color_t c;
+				if(a == 0xF0)
+					c = fg;
+				else
+					c = GR_FastBlend(fg, OLED_ReadPixel(screen, x, y), a);
+
+				OLED_DrawPixel(screen, x, y, c);
+			}
+
+			if(mask == 0x0F)
+				mask = 0xF0;
+			else {
+				mask = 0x0F;
+				index++;
+			}
+
+		}
+}
+
+
 /*
  * Draw a string using a font.
  */

@@ -23,9 +23,14 @@ ALLOCATE_ENDPOINT(Ping, 2, 'a');
 ALLOCATE_ENDPOINT(Speed, 4, 'b');
 
 /*
+ * Time: first byte hours, second byte minutes
+ */
+ALLOCATE_ENDPOINT(Time, 3, 'c');
+
+/*
  * Global list with all the endpoints configured
  */
-EP_const_ptr_t const EP_RxEndpoints[] = {Endpoint_Ping, Endpoint_Speed};
+EP_const_ptr_t const EP_RxEndpoints[] = {Endpoint_Ping, Endpoint_Speed, Endpoint_Time};
 
 /*** Function definitions *******************************************************/
 

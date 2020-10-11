@@ -26,6 +26,8 @@ typedef uint16_t Color_t;
 #define Color_YELLOW		((Color_t) GR_ConvertColor565(255,255,  0))
 #define Color_LIGHT_BLUE 	((Color_t) GR_ConvertColor565(  0,191,255))
 #define Color_PURPLE		((Color_t) GR_ConvertColor565(255,  0,255))
+#define Color_GREY			((Color_t) GR_ConvertColor565(105,105,105))
+#define Color_GOLD			((Color_t) GR_ConvertColor565(255,215,  0))
 
 /*
  * Max digits used to display numbers
@@ -179,6 +181,11 @@ void GR_DrawChar(OLED_data_t * screen, Rect_t rect, const uint8_t * font, Color_
  * Draw a bmp
  */
 void GR_DrawBitmap(OLED_data_t * screen, Point_t pos, struct Bitmap* bitmap);
+
+/*
+ * Draw a with color bmp
+ */
+void GR_DrawBitmapColorized(OLED_data_t * screen, Point_t pos, struct Bitmap* bitmap, Color_t color);
 
 /*
  * Clears a color
