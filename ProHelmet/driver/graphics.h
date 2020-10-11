@@ -180,4 +180,11 @@ void GR_DrawChar(OLED_data_t * screen, Rect_t rect, const uint8_t * font, Color_
  */
 void GR_DrawBitmap(OLED_data_t * screen, Point_t pos, struct Bitmap* bitmap);
 
+/*
+ * Clears a color
+ */
+static inline void GR_ClearColor(OLED_data_t * screen, Color_t color){
+	OLED_Clear(screen, color);
+}
+
 #endif /* DRIVER_GRAPHICS_H_ */

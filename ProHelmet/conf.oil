@@ -48,14 +48,15 @@ CPU mySystem {
     SECONDSPERTICK = 0.001;
   };
   
-  /* Resource declarations */
+  /* Resource declarations ****************************/
   
   RESOURCE Res_I2c2;
   RESOURCE Res_AccelData;
   RESOURCE Res_GyroData;
   RESOURCE Res_PressData;
   
-  /* Alarms declarations */
+  
+  /* Alarms declarations ******************************/
   
   ALARM AccelAlarm {
   	COUNTER = SystemTimer;
@@ -81,7 +82,10 @@ CPU mySystem {
   	AUTOSTART = FALSE;
   };
   
-  /* Task definitions */
+  
+  /* Task definitions ********************************/
+  
+  /* daemons */
   
   TASK AccelSensor {
   	PRIORITY = 10;
@@ -109,18 +113,27 @@ CPU mySystem {
   	RESOURCE = Res_PressData;
   };
   
+  /* main tasks */
+  
   TASK ViewBoot {
   	PRIORITY = 1;
   	STACK = SHARED;
   	APP_SRC = "ViewBoot.c";
-  	RESOURCE = Res_I2c2;
   	RESOURCE = Res_AccelData;
   	RESOURCE = Res_GyroData;
   	RESOURCE = Res_PressData;
   };
   
+  TASK ViewSpeed {
+  	PRIORITY = 1;
+  	STACK = SHARED;
+  	APP_SRC = "ViewSpeed.c";
+  	RESOURCE = Res_AccelData;
+  	RESOURCE = Res_GyroData;
+  };
   
-  /* ISR definition ****************** */
+  
+  /* ISR definition **************************************/
   
   ISR Button2ISR {
     CATEGORY = 1;
@@ -153,7 +166,7 @@ CPU mySystem {
   };
   
   
-  /* All the source files are listed here */
+  /* All the source files are listed here ******************/
   
   APPDATA myApp {
   	APP_SRC = "main.c";
