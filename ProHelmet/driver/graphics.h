@@ -28,6 +28,7 @@ typedef uint16_t Color_t;
 #define Color_PURPLE		((Color_t) GR_ConvertColor565(255,  0,255))
 #define Color_GREY			((Color_t) GR_ConvertColor565(105,105,105))
 #define Color_GOLD			((Color_t) GR_ConvertColor565(255,215,  0))
+#define Color_DARK_GREY		((Color_t) GR_ConvertColor565( 55, 55, 55))
 
 /*
  * Max digits used to display numbers

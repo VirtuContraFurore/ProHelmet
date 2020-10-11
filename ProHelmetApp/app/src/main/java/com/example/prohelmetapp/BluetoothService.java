@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.UUID;
 
 import javax.xml.transform.sax.TemplatesHandler;
@@ -29,6 +30,8 @@ public class BluetoothService extends Thread {
 
     private Gps gps;
 
+    private Stack<String> msg;
+
     /*
      * Contains the last event for each endpoint
      */
@@ -40,6 +43,7 @@ public class BluetoothService extends Thread {
         this.device = device;
         this.gps = context.gps;
         this.events = new HashMap<Integer, Integer>();
+        this.msg = new Stack<String>();
     }
 
     @Override
@@ -134,6 +138,14 @@ public class BluetoothService extends Thread {
 
     public void buttonCallback(int id){
         this.context.setTestText("Pressed button id:" + id + ", "+ ++cnt + " times.");
+        switch (id){
+            case 1:
+                this.msg.push("Paul: see you in 5 minutes!");
+                break;
+            case 2:
+                this.msg.push("Joe: Never mind, I'm late...");
+                break;
+        }
     }
 
     protected void loop() throws IOException {
@@ -202,6 +214,27 @@ public class BluetoothService extends Thread {
 
             this.output.write(msg);
             events.remove(Constants.EP_TIME);
+        }
+
+        if(!this.msg.empty()){
+            String m = this.msg.pop();
+            byte ch[] = m.getBytes();
+
+            this.output.write(Constants.EP_NOTIFICATION);
+            for(int i = 0; i < Constants.EP_NOTIFICATION_SIZE - 1; i++){
+                if(i < ch.length)
+                    this.output.write(ch[i]);
+                else
+                    this.output.write(0);
+            }
+            this.output.write(0);
+
+            this.context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(context, "Sent msg", Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 }

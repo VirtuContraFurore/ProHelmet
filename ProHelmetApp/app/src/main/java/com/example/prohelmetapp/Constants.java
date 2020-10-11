@@ -22,6 +22,8 @@ public interface Constants {
     public static final int EP_PING =       (int) 'a';
     public static final int EP_SPEED =      (int) 'b';
     public static final int EP_TIME =      (int) 'c';
+    public static final int EP_NOTIFICATION =      (int) 'd';
+    public static final int EP_NOTIFICATION_SIZE = 256;
 
 
 }

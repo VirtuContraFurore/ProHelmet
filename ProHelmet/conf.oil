@@ -207,6 +207,7 @@ CPU mySystem {
     APP_SRC = "driver/adxl345.c";
     APP_SRC = "driver/l3g4200d.c";
     APP_SRC = "sensors.c";
+    APP_SRC = "Notifications.c";
   };
 
  

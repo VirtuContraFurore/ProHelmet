@@ -7,6 +7,8 @@
 
 #include "ViewSpeed.h"
 
+#include "Notifications.h"
+
 static Sensor_accel_data_t accel;
 //static Sensor_gyro_data_t gyro;
 
@@ -34,6 +36,8 @@ void ViewSpeed_drawingLoop(){
 
 	GR_DrawBitmapColorized(screen, (Point_t) {0, +3}, &bitmap_Smallclock, Color_WHITE);
 	ViewSpeed_drawTime((Point_t) {16, -6}, Color_WHITE);
+
+	Notifications_Draw();
 
 	GR_SwapBuffers(screen);
 }
