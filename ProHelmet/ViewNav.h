@@ -11,6 +11,7 @@
 #include "ee.h"
 #include "utils.h"
 #include "system.h"
+#include "Notifications.h"
 
 #include "driver/graphics.h"
 

@@ -15,7 +15,7 @@ TASK(ViewBoot){
 	__PRINT_DEBUG_STR("Booting!\n");
 
 	/* Ping Bluetooth */
-	EPCTL_RequestData(Endpoint_Ping);
+	Ping_start();
 
 	/**
 	 * TODO: Prima mostriamo uno splash screen!!!

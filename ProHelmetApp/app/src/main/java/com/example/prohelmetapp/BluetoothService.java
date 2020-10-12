@@ -37,6 +37,8 @@ public class BluetoothService extends Thread {
      */
     private Map<Integer, Integer> events;
 
+    private int pings = 0;
+
     public BluetoothService(MainActivity context, BluetoothAdapter adapter, BluetoothDevice device){
         this.context = context;
         this.adapter = adapter;
@@ -140,7 +142,7 @@ public class BluetoothService extends Thread {
         this.context.setTestText("Pressed button id:" + id + ", "+ ++cnt + " times.");
         switch (id){
             case 1:
-                this.msg.push("Paul: see you in 5 minutes!");
+                this.msg.push("Paul: See you in 5 minutes!");
                 break;
             case 2:
                 this.msg.push("Joe: Never mind, I'm late...");
@@ -198,12 +200,14 @@ public class BluetoothService extends Thread {
             this.output.write(msg);
             events.remove(Constants.EP_PING);
 
-            this.context.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(context, "Ping signal sent", Toast.LENGTH_SHORT).show();
-                }
-            });
+            if((pings % 10) == 0)
+                this.context.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, "Ping signal sent: "+pings, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            pings++;
         }
 
         if(events.containsKey(Constants.EP_TIME) && events.get(Constants.EP_TIME) == Constants.EP_CTL_REQ_DATA){

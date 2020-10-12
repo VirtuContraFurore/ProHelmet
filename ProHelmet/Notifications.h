@@ -10,12 +10,24 @@
 
 #include "utils.h"
 #include "system.h"
+#include "PingBluetooth.h"
 
 #include "driver/graphics.h"
 #include "driver/bluetooth_endpoints.h"
 
 #include "assets/fonts/MonoTypewriter22.h"
 #include "assets/fonts/ArialNarrow22.h"
+#include "assets/fonts/ArialNarrow18.h"
+#include "assets/fonts/RobotoThin18.h"
+#include "assets/fonts/RobotoLight18.h"
+#include "assets/fonts/RobotoCondensed18.h"
+#include "assets/fonts/RobotoBoldCondensed18.h"
+
+#include "assets/images/TelegramLogo.h"
+#include "assets/images/Greentick.h"
+#include "assets/images/Redcross.h"
+#include "assets/images/Bluetooth.h"
+
 
 #define Not_scrollTime_ms 800
 
@@ -23,6 +35,8 @@
  * Draw over-screen notifications
  */
 void Notifications_Draw();
+
+void Notifications_DrawConn();
 
 void Notifications_DrawRect(int16_t y, Color_t color);
 

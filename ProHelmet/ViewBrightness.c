@@ -63,13 +63,18 @@ TASK(ViewBrightness){
 void ViewBrightness_drawingLoop(){
 	GR_ClearColor(screen, Color_BLACK);
 
-	GR_DrawBitmapColorized(screen, (Point_t) {(160-54), 3}, &bitmap_Brightness_ctl, Color_GREY);
+	uint8_t col1[] = {255, 255, 0};
+	uint8_t col2[] = {128,   0, 0};
+	Color_t color = GR_BlendHires(col1, col2, ((Brightness_adjust-BRG_MIN)*255)/(BRG_MAX-BRG_MIN));
+	GR_DrawBitmapColorized(screen, (Point_t) {(160-54), 3}, &bitmap_Brightness_ctl, color);
 
 	GR_DrawString(screen, (Point_t) {5, 5}, "Brightness", &font_ArialNarrow22px, Color_WHITE);
 	GR_DrawString(screen, (Point_t) {5,35}, "adjust +/-", &font_ArialNarrow22px, Color_WHITE);
 
 	GR_DrawRect(screen, (Rect_t) {  5, 60, 150, 15}, Color_WHITE);
 	GR_FillRect(screen, (Rect_t) {  5+2, 60+2, (150-4)*(Brightness_adjust-BRG_MIN)/(BRG_MAX-BRG_MIN), 15-4}, Color_GOLD);
+
+	Notifications_Draw();
 
 	GR_SwapBuffers(screen);
 }

@@ -25,5 +25,7 @@ void ViewNav_drawingLoop(){
 
 	GR_DrawString(screen, (Point_t) {0,0}, "Navigator", &font_ArialNarrow22px,Color_PURPLE);
 
+	Notifications_Draw();
+
 	GR_SwapBuffers(screen);
 }

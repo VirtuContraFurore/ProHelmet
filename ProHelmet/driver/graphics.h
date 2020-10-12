@@ -29,7 +29,8 @@ typedef uint16_t Color_t;
 #define Color_GREY			((Color_t) GR_ConvertColor565(105,105,105))
 #define Color_GOLD			((Color_t) GR_ConvertColor565(255,215,  0))
 #define Color_DARK_GREY		((Color_t) GR_ConvertColor565( 55, 55, 55))
-
+#define Color_MAROON_BROWN	((Color_t) GR_ConvertColor565(128,  0,  0))
+#define Color_LIGHT_GREY	((Color_t) GR_ConvertColor565(211,211,211))
 /*
  * Max digits used to display numbers
  */
@@ -38,7 +39,7 @@ typedef uint16_t Color_t;
 /*
  * FPS statistics
  */
-#define SHOW_FPS
+//#define SHOW_FPS
 #define FPS_AVERAGE 50
 #define FPS_COLOR	Color_RED
 
@@ -129,6 +130,17 @@ inline Color_t GR_FastBlend(Color_t foreground, Color_t background, uint8_t alph
     fg = (fg | (fg << 16)) & 0b00000111111000001111100000011111;
     uint32_t result = ((((fg - bg) * alpha) >> 5) + bg) & 0b00000111111000001111100000011111;
     return (uint16_t)((result >> 16) | result);
+}
+
+/*
+ * Blend colors with 8-bit alpha channel
+ */
+inline Color_t GR_BlendHires(uint8_t fg[3], uint8_t bg[3], uint8_t alpha){
+	uint8_t rs[3];
+	rs[0] = bg[0] + alpha * (fg[0] - bg[0]) / 256;
+	rs[1] = bg[1] + alpha * (fg[1] - bg[1]) / 256;
+	rs[2] = bg[2] + alpha * (fg[2] - bg[2]) / 256;
+	return GR_ConvertColor565(rs[0], rs[1], rs[2]);
 }
 
 /*

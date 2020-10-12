@@ -21,7 +21,7 @@ CPU mySystem {
     };
     
     KERNEL_TYPE = OSEK {
-      CLASS = BCC1;
+      CLASS = BCC2;
     };
 
     LDFLAGS="-specs=nano.specs -specs=nosys.specs";
@@ -55,6 +55,7 @@ CPU mySystem {
   RESOURCE Res_GyroData;
   RESOURCE Res_PressData;
   RESOURCE Res_TimeData;
+  RESOURCE Res_Bluetooth;
   
   
   /* Alarms declarations ******************************/
@@ -86,6 +87,12 @@ CPU mySystem {
   ALARM TimeAlarm {
   	COUNTER = SystemTimer;
   	ACTION = ACTIVATETASK{ TASK = IncrTime; };
+  	AUTOSTART = FALSE;
+  };
+  
+  ALARM PingAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = PingBluetooth; };
   	AUTOSTART = FALSE;
   };
   
@@ -124,7 +131,15 @@ CPU mySystem {
   	PRIORITY = 15;
   	STACK = SHARED;
   	RESOURCE = Res_TimeData;
+  	RESOURCE = Res_Bluetooth;
   	APP_SRC = "time.c";
+  };
+  
+  TASK PingBluetooth {
+  	PRIORITY = 5;
+  	STACK = SHARED;
+  	RESOURCE = Res_Bluetooth;
+  	APP_SRC = "PingBluetooth.c";
   };
   
   /* main tasks */
@@ -136,6 +151,7 @@ CPU mySystem {
   	RESOURCE = Res_AccelData;
   	RESOURCE = Res_GyroData;
   	RESOURCE = Res_PressData;
+  	RESOURCE = Res_Bluetooth;
   };
   
   TASK ViewSpeed {
@@ -145,18 +161,21 @@ CPU mySystem {
   	RESOURCE = Res_AccelData;
   	RESOURCE = Res_GyroData;
   	RESOURCE = Res_TimeData;
+  	RESOURCE = Res_Bluetooth;
   };
   
   TASK ViewNav {
   	PRIORITY = 1;	
   	STACK = SHARED;
   	APP_SRC = "ViewNav.c";
+  	RESOURCE = Res_Bluetooth;
   };
   
   TASK ViewBrightness {
   	PRIORITY = 1;	
   	STACK = SHARED;
   	APP_SRC = "ViewBrightness.c";
+  	RESOURCE = Res_Bluetooth;
   };
   
   

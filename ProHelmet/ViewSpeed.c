@@ -14,6 +14,7 @@ static Sensor_accel_data_t accel;
 
 TASK(ViewSpeed){
 	int down = 0;
+
 	while(1){
 		if(SYS_getButton2Status() == 1){
 			if(down)

@@ -12,6 +12,8 @@
 
 #define TIME_WAIT_TIMEOUT_wait_state	10000
 
+#define TIME_RESYNCH_mins	3
+
 void Time_init();
 
 int8_t Time_getHours();
