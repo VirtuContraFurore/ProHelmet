@@ -124,7 +124,7 @@
         android:layout_width="103dp"
         android:layout_height="50dp"
         android:onClick="buttonOnClick3"
-        android:text="@string/test_1"
+        android:text="@string/nav_1"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.181"

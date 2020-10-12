@@ -24,6 +24,7 @@ public interface Constants {
     public static final int EP_TIME =      (int) 'c';
     public static final int EP_NOTIFICATION =      (int) 'd';
     public static final int EP_NOTIFICATION_SIZE = 256;
-
+    public static final int EP_SATNAV =      (int) 'f';
+    public static final int EP_SATNAV_SIZE = 256;
 
 }

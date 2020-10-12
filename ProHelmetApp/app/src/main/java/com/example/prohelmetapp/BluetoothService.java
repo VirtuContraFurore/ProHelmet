@@ -31,6 +31,13 @@ public class BluetoothService extends Thread {
     private Gps gps;
 
     private Stack<String> msg;
+    private Stack<Direction> dirs;
+
+    public class Direction {
+        byte sign;
+        short distance;
+        String str;
+    };
 
     /*
      * Contains the last event for each endpoint
@@ -46,6 +53,7 @@ public class BluetoothService extends Thread {
         this.gps = context.gps;
         this.events = new HashMap<Integer, Integer>();
         this.msg = new Stack<String>();
+        this.dirs = new Stack<Direction>();
     }
 
     @Override
@@ -147,6 +155,13 @@ public class BluetoothService extends Thread {
             case 2:
                 this.msg.push("Joe: Never mind, I'm late...");
                 break;
+            case 3:
+                Direction d = new Direction();
+                d.sign = 1;
+                d.distance = 1200;
+                d.str = "Turn left at the roundabout";
+                this.dirs.push(d);
+                break;
         }
     }
 
@@ -239,6 +254,21 @@ public class BluetoothService extends Thread {
                     Toast.makeText(context, "Sent msg", Toast.LENGTH_SHORT).show();
                 }
             });
+        }
+
+        if(!this.dirs.isEmpty()){
+            Direction dir =this.dirs.pop();
+            this.output.write(Constants.EP_SATNAV);
+            this.output.write(dir.sign);
+            this.output.write(dir.distance & 0xFF);
+            this.output.write((dir.distance >> 8 )& 0xFF);
+            for(int i = 0; i < Constants.EP_SATNAV_SIZE - 3 - 1; i++){
+                if(i < dir.str.length())
+                    this.output.write(dir.str.charAt(i));
+                else
+                    this.output.write(0);
+            }
+            this.output.write(0);
         }
     }
 }

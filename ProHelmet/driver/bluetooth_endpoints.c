@@ -32,11 +32,15 @@ ALLOCATE_ENDPOINT(Time, 2, 'c');
  */
 ALLOCATE_ENDPOINT(Notification, 256, 'd');
 
+/*
+ * SatNav: 1st byte: sign, 2nd + 3rd bytes: distance, string
+ */
+ALLOCATE_ENDPOINT(SatNav, 256, 'f');
 
 /*
  * Global list with all the endpoints configured
  */
-EP_const_ptr_t const EP_RxEndpoints[] = {Endpoint_Ping, Endpoint_Speed, Endpoint_Time, Endpoint_Notification};
+EP_const_ptr_t const EP_RxEndpoints[] = {Endpoint_Ping, Endpoint_Speed, Endpoint_Time, Endpoint_Notification, Endpoint_SatNav};
 
 /*** Function definitions *******************************************************/
 
