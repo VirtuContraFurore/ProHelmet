@@ -28,6 +28,8 @@ public class Gps implements LocationListener {
 
     public Object lock;
 
+    long time;
+
     Gps(Context context) {
         this.context = context;
         this.lock = new Object();
@@ -55,6 +57,7 @@ public class Gps implements LocationListener {
         Log.d(Constants.LOG, "gps update");
         synchronized (this.lock) {
             this.speed = location.getSpeed()*3.6f;
+            time = System.currentTimeMillis();
         }
 
         /*
@@ -83,7 +86,10 @@ public class Gps implements LocationListener {
     }
 
     public double getSpeed(){
-        return (double) speed;
+        if(System.currentTimeMillis() - time < 1000)
+            return (double) speed;
+        else
+            return -1;
     }
 
     private static double getDistance(double lat1, double lon1, double lat2, double lon2) {

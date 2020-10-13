@@ -12,6 +12,7 @@
 #include "utils.h"
 #include "system.h"
 #include "PingBluetooth.h"
+#include "Speed.h"
 
 #include "driver/graphics.h"
 #include "driver/bluetooth.h"

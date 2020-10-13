@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ProHelmetApp</string>
-    <string name="prohelmet_alpha">ProHelmet, alpha v0.1</string>
+    <string name="prohelmet_alpha">ProHelmet, alpha v0.1, DEMO SOFTWARE</string>
     <string name="connect_str">Connect!</string>
     <string name="status_disconnected_str">Status: disconnected</string>
     <string name="status_connected_str">Status: connected</string>
@@ -12,4 +12,5 @@
     <string name="msg_1">Msg 1</string>
     <string name="msg_2">Msg 2</string>
     <string name="nav_1">NAV 1</string>
+    <string name="speed_rnd">SPEED RND</string>
 </resources>

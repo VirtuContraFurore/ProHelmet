@@ -23,35 +23,6 @@
 #include "driver/graphics.h"
 #include "driver/bluetooth.h"
 
-/*
- * Struttura del programma:
- *
- * un task per "view" sullo schermo
- * background task: ricevere notifiche
- * background task: mandare dati
- * background task: ricevere dati
- * background task: controllare che non siamo caduti e nel caso lanciare un SoS
- * background task: check accelerometro
- * background task: check giroscopio
- * background task: check buttons
- * background task: check pressure & temp
- * interrupt degli user buttons
- *
- * Usare le ALARMSs per i background, aggioranandole con l'ISR every ms
- *
- * la photores viene letta esplicitamente
- * gli altri device pure dire...
- *
- * all'avvio fare un check di tutto l'hardware....
- * fare uno splash screen carino...! :-)
- *
- * cosa mettere nel main...?
- *
- * Testare acceleremotro + giroscopio
- *
- * c'è anche il sensore di pressione.... può essere utile...? ---> previsioni meteo...!!!
- */
-
 OLED_data_t screen_data;
 OLED_data_t * screen;
 

@@ -18,8 +18,7 @@ TASK(ViewBoot){
 	Ping_start();
 
 	/**
-	 * TODO: Prima mostriamo uno splash screen!!!
-	 * Qualcosa di figo...
+	 * TODO: splash screen.
 	 */
 
 	/* Draw booting diagnostics */
@@ -28,7 +27,11 @@ TASK(ViewBoot){
 	/* Accelerometer calibration */
 	draw_sensor_calib(CALIB_ms);
 
+	/* Loading... */
 	draw_done(DONE_ms);
+
+	/* Enable speed calculation */
+	Speed_start();
 
 	ChainTask(ViewSpeed);
 }

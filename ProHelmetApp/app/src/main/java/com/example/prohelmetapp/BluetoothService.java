@@ -46,6 +46,8 @@ public class BluetoothService extends Thread {
 
     private int pings = 0;
 
+    private int speed_rand = 0;
+
     public BluetoothService(MainActivity context, BluetoothAdapter adapter, BluetoothDevice device){
         this.context = context;
         this.adapter = adapter;
@@ -162,6 +164,9 @@ public class BluetoothService extends Thread {
                 d.str = "Turn left at the roundabout";
                 this.dirs.push(d);
                 break;
+            case 4:
+                speed_rand ^= 1;
+                break;
         }
     }
 
@@ -233,6 +238,31 @@ public class BluetoothService extends Thread {
 
             this.output.write(msg);
             events.remove(Constants.EP_TIME);
+        }
+
+        if(events.containsKey(Constants.EP_SPEED) && events.get(Constants.EP_SPEED) == Constants.EP_CTL_REQ_DATA){
+            byte msg[] = new byte[5];
+            msg[0] = Constants.EP_SPEED;
+
+            float speed;
+            if(speed_rand == 1)
+                speed = (float) (200*Math.random())/3.6f;
+            else {
+                synchronized (gps.lock) {
+                    speed = (float) (gps.getSpeed());
+                }
+            }
+
+            if(!(speed < 0)) {
+                int bits = Float.floatToIntBits(speed);
+                msg[1] = (byte) ((bits >> 0) & 0xFF);
+                msg[2] = (byte) ((bits >> 8) & 0xFF);
+                msg[3] = (byte) ((bits >> 16) & 0xFF);
+                msg[4] = (byte) ((bits >> 24) & 0xFF);
+            }
+
+            this.output.write(msg);
+            events.remove(Constants.EP_SPEED);
         }
 
         if(!this.msg.empty()){

@@ -49,6 +49,7 @@ void ViewNav_drawingLoop(){
 	if(symbol == 0){
 		GR_DrawString(screen, (Point_t) {0, 10}, "Awaiting route", &font_ArialNarrow22px, Color_WHITE);
 		GR_DrawString(screen, (Point_t) {0, 40}, "from App", &font_ArialNarrow22px, Color_WHITE);
+		ViewNav_drawTemp();
 	} else {
 		ViewNav_drawNav();
 	}
@@ -70,8 +71,26 @@ void ViewNav_drawNav(){
 	GR_DrawLine(screen, (Point_t) {0, 62}, (Point_t) { 60, 62}, color);
 	GR_DrawLine(screen, (Point_t) {0, 63}, (Point_t) { 60, 63}, color);
 
-	GR_DrawNumber(screen,(Point_t) {70, -5}, distance, 4, &font_MonoTypewriter22px, Color_LIGHT_BLUE);
-	GR_DrawString(screen, (Point_t){126, -5}, "m", &font_MonoTypewriter22px, Color_LIGHT_BLUE);
+	GR_DrawNumber(screen,(Point_t) {70, -5}, distance, 4, &font_MonoTypewriter22px, Color_GREEN);
+	GR_DrawString(screen, (Point_t){126, -5}, "m", &font_MonoTypewriter22px, Color_GREEN);
 
 	GR_DrawString(screen, (Point_t) {68, 25}, msg, &font_RobotoCondensed18px, Color_WHITE);
+
+	ViewNav_drawTemp();
+}
+
+
+void ViewNav_drawTemp(){
+	Color_t color = Color_LIGHT_GREY;
+
+	Sensor_press_data_t data = Sensor_getPress();
+
+	int32_t temp = data.temp;
+
+	int16_t y = screen->height - 16;
+	int16_t x = 8;
+	GR_DrawNumber(screen, (Point_t){x, y}, temp/10, 2, &font_MonoTypewriter12px, color);
+	GR_DrawString(screen, (Point_t){x+15, y}, ".", &font_MonoTypewriter12px, color);
+	GR_DrawNumber(screen, (Point_t){x+22, y}, temp%10, 1, &font_MonoTypewriter12px, color);
+	GR_DrawString(screen, (Point_t){x+30, y}, "C", &font_MonoTypewriter12px, color);
 }

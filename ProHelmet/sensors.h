@@ -39,8 +39,8 @@ typedef struct Vec3_32 {
 typedef struct Sensor_accel_data {
 	Vec3_16_t value;
 	Vec3_16_t calib;
-	Vec3_16_t filter_avg_4;
-	Vec3_16_t last_3_sample[3];
+	float calib_xy_mod;
+	float a;
 	int16_t calibration_ongoing;
 } Sensor_accel_data_t;
 

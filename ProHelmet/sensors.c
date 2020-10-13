@@ -9,6 +9,8 @@
 #include "ee.h"
 #include "driver/oled.h"
 
+#include "math.h"
+
 static int init = 0;
 
 static Sensor_accel_data_t Sensor_accel;
@@ -89,6 +91,7 @@ TASK(AccelSensor){
 					Sensor_accel.calib.x = cal_x / SENSOR_CALIBRATION_TICKS(ACCEL);
 					Sensor_accel.calib.y = cal_y / SENSOR_CALIBRATION_TICKS(ACCEL);
 					Sensor_accel.calib.z = cal_z / SENSOR_CALIBRATION_TICKS(ACCEL);
+					Sensor_accel.calib_xy_mod = (float) sqrtf(cal_x*cal_x + cal_y*cal_y);
 				}
 			}
 

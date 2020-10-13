@@ -1,3 +1,12 @@
+/*
+ * author: luca
+ * 
+ * OIL file for ProHelmet ErikaEnterprise implementation
+ * 
+ * This whole project is distributed under GPL v3
+ * 
+ */
+
 CPU mySystem {
 
   OS myOs {
@@ -21,7 +30,7 @@ CPU mySystem {
     };
     
     KERNEL_TYPE = OSEK {
-      CLASS = BCC2;
+      CLASS = BCC1;
     };
 
     LDFLAGS="-specs=nano.specs -specs=nosys.specs";
@@ -96,6 +105,12 @@ CPU mySystem {
   	AUTOSTART = FALSE;
   };
   
+  ALARM SpeedAlarm {
+  	COUNTER = SystemTimer;
+  	ACTION = ACTIVATETASK{ TASK = SpeedMeasurment; };
+  	AUTOSTART = FALSE;
+  };
+  
   
   /* Task definitions ********************************/
   
@@ -139,7 +154,14 @@ CPU mySystem {
   	PRIORITY = 5;
   	STACK = SHARED;
   	RESOURCE = Res_Bluetooth;
+  	RESOURCE = Res_AccelData;
   	APP_SRC = "PingBluetooth.c";
+  };
+  
+  TASK SpeedMeasurment {
+  	PRIORITY = 9;
+  	RESOURCE = Res_Bluetooth;
+  	APP_SRC = "Speed.c";
   };
   
   /* main tasks */
@@ -169,6 +191,7 @@ CPU mySystem {
   	STACK = SHARED;
   	APP_SRC = "ViewNav.c";
   	RESOURCE = Res_Bluetooth;
+  	RESOURCE = Res_PressData;
   };
   
   TASK ViewBrightness {

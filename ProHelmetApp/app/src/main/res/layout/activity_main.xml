@@ -111,7 +111,7 @@
         android:layout_width="103dp"
         android:layout_height="50dp"
         android:onClick="buttonOnClick4"
-        android:text="@string/test_1"
+        android:text="@string/speed_rnd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.84"

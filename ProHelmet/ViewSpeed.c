@@ -33,7 +33,11 @@ void ViewSpeed_drawingLoop(){
 	GR_ClearColor(screen, Color_BLACK);
 	ViewSpeed_drawbackground();
 
-	ViewSpeed_drawspeed((Point_t) {160-98,16}, 157, Color_WHITE);
+	/*
+	 * TODO: demo only, send over bluetooth the actual speed limit
+	 */
+	ViewSpeed_drawspeed((Point_t) {160-98,16}, Speed_get_kmh(), (Speed_get_kmh() < 50) ? Color_WHITE : Color_RED);
+	ViewSpeed_drawStopDistance((Point_t) {65, -6}, Speed_getBrakingDistance(), Color_MAROON_BROWN);
 
 	GR_DrawBitmapColorized(screen, (Point_t) {0, +3}, &bitmap_Smallclock, Color_WHITE);
 	ViewSpeed_drawTime((Point_t) {16, -6}, Color_WHITE);
@@ -70,7 +74,8 @@ void ViewSpeed_drawTime(Point_t pos, Color_t color){
 
 void ViewSpeed_drawbackground(){
 	Color_t bar_color;
-	int16_t val = accel.value.x * 2;
+	int32_t val = ((accel.value.x-accel.calib.x) *( + accel.calib.y) + (accel.value.y-accel.calib.y) * ( - accel.calib.x)) / 255;
+
 	if(val > 0){
 		uint8_t blend = (val > 0xFF) ? 0xFF : val;
 		bar_color = GR_Blend(Color_RED, Color_BLUE, blend);
@@ -90,8 +95,13 @@ void ViewSpeed_drawspeed(Point_t pos, uint16_t speed, Color_t color){
 	}
 	if(digits[2])
 		GR_DrawNumber(screen, (Point_t) {pos.x   , pos.y}, digits[2], 1, &font_MonoTypewriter60px, color);
-	if(digits[1])
+	if(digits[1] || digits[2])
 		GR_DrawNumber(screen, (Point_t) {pos.x+23   , pos.y}, digits[1], 1, &font_MonoTypewriter60px, color);
-	if(digits[0])
+//	if(digits[0])
 		GR_DrawNumber(screen, (Point_t) {pos.x+53   , pos.y}, digits[0], 1, &font_MonoTypewriter60px, color);
+}
+
+void ViewSpeed_drawStopDistance(Point_t pos, uint32_t distance, Color_t color){
+	GR_DrawNumber(screen, pos, distance, 4, &font_MonoTypewriter22px, color);
+	GR_DrawString(screen, (Point_t){pos.x + 56, pos.y}, "m", &font_MonoTypewriter22px, color);
 }
