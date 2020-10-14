@@ -27,6 +27,8 @@
 #include "assets/images/Greentick.h"
 #include "assets/images/Redcross.h"
 #include "assets/images/Bluetooth.h"
+#include "assets/images/PhoneCall.h"
+#include "assets/images/Info.h"
 
 
 #define Not_scrollTime_ms 800

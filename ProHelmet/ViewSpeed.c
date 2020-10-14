@@ -74,14 +74,14 @@ void ViewSpeed_drawTime(Point_t pos, Color_t color){
 
 void ViewSpeed_drawbackground(){
 	Color_t bar_color;
-	int32_t val = ((accel.value.x-accel.calib.x) *( + accel.calib.y) + (accel.value.y-accel.calib.y) * ( - accel.calib.x)) / 255;
+	int32_t val = (((accel.value.x-accel.calib.x) *( + accel.calib.y) + (accel.value.y-accel.calib.y) * ( - accel.calib.x))) / 255;
 
 	if(val > 0){
 		uint8_t blend = (val > 0xFF) ? 0xFF : val;
-		bar_color = GR_Blend(Color_RED, Color_BLUE, blend);
+		bar_color = GR_Blend(Color_GREEN, Color_BLUE, blend);
 	} else {
 		uint8_t blend = (-val > 0xFF) ? 0xFF : -val;
-		bar_color = GR_Blend(Color_GREEN, Color_BLUE, blend);
+		bar_color = GR_Blend(Color_RED, Color_BLUE, blend);
 	}
 	GR_DrawBitmapColorized(screen, (Point_t) {0, 0}, &bitmap_Speedback, bar_color);
 }
@@ -97,7 +97,7 @@ void ViewSpeed_drawspeed(Point_t pos, uint16_t speed, Color_t color){
 		GR_DrawNumber(screen, (Point_t) {pos.x   , pos.y}, digits[2], 1, &font_MonoTypewriter60px, color);
 	if(digits[1] || digits[2])
 		GR_DrawNumber(screen, (Point_t) {pos.x+23   , pos.y}, digits[1], 1, &font_MonoTypewriter60px, color);
-//	if(digits[0])
+
 		GR_DrawNumber(screen, (Point_t) {pos.x+53   , pos.y}, digits[0], 1, &font_MonoTypewriter60px, color);
 }
 

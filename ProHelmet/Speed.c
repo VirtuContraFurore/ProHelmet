@@ -101,7 +101,7 @@ static float getSpeedInc(Sensor_accel_data_t accel, time_ms_t elapsed){
 
 	float delta_speed = a * elapsed / 1000;
 
-	if(fabs(delta_speed) < 0.05f)
+	if(fabs(delta_speed) < 0.5f)
 		return 0;
 
 

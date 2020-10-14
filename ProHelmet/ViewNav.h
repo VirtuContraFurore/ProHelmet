@@ -24,10 +24,11 @@
 #include "assets/fonts/MonoTypewriter12.h"
 
 #include "assets/images/roundabout_2l.h"
+#include "assets/images/ExitRight.h"
 
 #define VIEWNAV_NEXT ViewBrightness
 
-static struct Bitmap * const signals[]= {&bitmap_roundabout_2l};
+static struct Bitmap * const signals[]= {&bitmap_roundabout_2l, &bitmap_ExitRight};
 
 void ViewNav_drawingLoop();
 void ViewNav_drawNav();

@@ -30,14 +30,24 @@ public class BluetoothService extends Thread {
 
     private Gps gps;
 
-    private Stack<String> msg;
+    private Stack<Message> msgs;
     private Stack<Direction> dirs;
 
     public class Direction {
         byte sign;
         short distance;
         String str;
+        static final int icon_Turnbout_Left = 1;
+        static final int icon_Exit_Right = 2;
     };
+
+    public class Message {
+        String msg;
+        int icon;
+        static final int icon_Info = 0;
+        static final int icon_Call = 1;
+        static final int icon_Telegram = 2;
+    }
 
     /*
      * Contains the last event for each endpoint
@@ -54,7 +64,7 @@ public class BluetoothService extends Thread {
         this.device = device;
         this.gps = context.gps;
         this.events = new HashMap<Integer, Integer>();
-        this.msg = new Stack<String>();
+        this.msgs = new Stack<Message>();
         this.dirs = new Stack<Direction>();
     }
 
@@ -152,20 +162,39 @@ public class BluetoothService extends Thread {
         this.context.setTestText("Pressed button id:" + id + ", "+ ++cnt + " times.");
         switch (id){
             case 1:
-                this.msg.push("Paul: See you in 5 minutes!");
+                Message m1 = new Message();
+                m1.msg = "Paul: See you in 5 minutes!";
+                m1.icon = Message.icon_Telegram;
+                this.msgs.push(m1);
                 break;
             case 2:
-                this.msg.push("Joe: Never mind, I'm late...");
+                Message m2 = new Message();
+                m2.msg = "Joe: Never mind, I'm late...";
+                m2.icon = Message.icon_Telegram;
+                this.msgs.push(m2);
                 break;
             case 3:
-                Direction d = new Direction();
-                d.sign = 1;
-                d.distance = 1200;
-                d.str = "Turn left at the roundabout";
-                this.dirs.push(d);
+                Direction d1 = new Direction();
+                d1.sign = Direction.icon_Turnbout_Left;
+                d1.distance = 1200;
+                d1.str = "Turn left at the roundabout";
+                this.dirs.push(d1);
+                break;
+            case 6:
+                speed_rand ^= 1;
+                break;
+            case 5:
+                Direction d2 = new Direction();
+                d2.sign = Direction.icon_Exit_Right;
+                d2.distance = 9500;
+                d2.str = "Exit the highway at \"Pisa Nord\"";
+                this.dirs.push(d2);
                 break;
             case 4:
-                speed_rand ^= 1;
+                Message m3 = new Message();
+                m3.msg = "Anne: Incoming Call...";
+                m3.icon = Message.icon_Call;
+                this.msgs.push(m3);
                 break;
         }
     }
@@ -265,11 +294,14 @@ public class BluetoothService extends Thread {
             events.remove(Constants.EP_SPEED);
         }
 
-        if(!this.msg.empty()){
-            String m = this.msg.pop();
-            byte ch[] = m.getBytes();
+        if(!this.msgs.empty()){
+            Message m = this.msgs.pop();
+            byte ch[] = m.msg.getBytes();
 
             this.output.write(Constants.EP_NOTIFICATION);
+
+            this.output.write(m.icon);
+
             for(int i = 0; i < Constants.EP_NOTIFICATION_SIZE - 1; i++){
                 if(i < ch.length)
                     this.output.write(ch[i]);

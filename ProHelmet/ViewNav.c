@@ -29,7 +29,7 @@ void ViewNav_drawingLoop(){
 	GR_ClearColor(screen, Color_BLACK);
 
 	if(EPCTL_PayloadReceived(Endpoint_SatNav)){
-		symbol = Endpoint_SatNav->data[0];
+		symbol = Endpoint_SatNav->data[0] % (sizeof(signals)+1);
 
 		if(symbol != 0){
 			distance = Endpoint_SatNav->data[1] | (Endpoint_SatNav->data[2] << 8);
@@ -61,7 +61,7 @@ void ViewNav_drawingLoop(){
 void ViewNav_drawNav(){
 	Color_t color = Color_RED;
 
-	GR_DrawBitmapColorized(screen, (Point_t) {0,0}, &bitmap_roundabout_2l, Color_ORANGE);
+	GR_DrawBitmapColorized(screen, (Point_t) {0,0}, signals[symbol-1], Color_ORANGE);
 
 	GR_DrawLine(screen, (Point_t) { 61, 0}, (Point_t) { 61, screen->height}, color);
 	GR_DrawLine(screen, (Point_t) { 62, 0}, (Point_t) { 62, screen->height}, color);

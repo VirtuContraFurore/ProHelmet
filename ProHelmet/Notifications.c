@@ -15,6 +15,9 @@ static time_ms_t start = 0;
 static time_ms_t duration;
 static char str[256];
 static char from[50];
+static uint8_t icon;
+
+static struct Bitmap * icons[] = {&bitmap_Info, &bitmap_PhoneCall, &bitmap_TelegramLogo};
 
 static enum {waiting, displaying} state;
 
@@ -32,6 +35,8 @@ void Notifications_Draw(){
 		state = displaying;
 		start = SYS_getTimeMillis();
 
+		icon = Endpoint_Notification->data[0] % sizeof(icons);
+
 		uint8_t * prefix = "from ";
 
 		unsigned int k;
@@ -42,12 +47,12 @@ void Notifications_Draw(){
 		}
 
 		int i;
-		for(i = 0;i < Endpoint_Notification->size; i++){
+		for(i = 1;i < Endpoint_Notification->size && k < sizeof(from); i++, k++){
 			if(Endpoint_Notification->data[i] == ':'){
-				from[i+k] = 0;
+				from[k] = 0;
 				break;
 			}
-			from[i+k] = Endpoint_Notification->data[i];
+			from[k] = Endpoint_Notification->data[i];
 		}
 
 		i++;
@@ -91,7 +96,7 @@ void Notifications_DrawRect(int16_t y, Color_t color){
 	GR_FillRect(screen, (Rect_t) { (Point_t) {0, y+screen->height-8}, screen->width, 8}, Color_BLACK);
 	GR_FillRect(screen, (Rect_t) { (Point_t) {80-20, y+screen->height-5}, 40, 2}, Color_DARK_GREY);
 
-	GR_DrawBitmap(screen, (Point_t) {8, y+2}, &bitmap_TelegramLogo);
+	GR_DrawBitmap(screen, (Point_t) {8, y+2}, icons[icon]);
 	GR_DrawString_noWrap(screen, (Point_t) {35, y - 1}, from, &font_RobotoBoldCondensed18px, Color_LIGHT_GREY);
 	GR_DrawString(screen, (Point_t) {0, y + 18}, str, &font_RobotoLight18px, color);
 }
