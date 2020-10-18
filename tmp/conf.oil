@@ -114,7 +114,7 @@ CPU mySystem {
   
   /* Task definitions ********************************/
   
-  /* demons */
+  /* daemons */
   
   TASK AccelSensor {
   	PRIORITY = 10;
