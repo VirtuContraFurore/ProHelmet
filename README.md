@@ -5,11 +5,14 @@
 Presented at **Huawei University Challenge 2020**
 
 ## ProHelemet: Erika3 project
-This application runs on top of the **Erika Enterprise RTOS** developed by Evidence Srl.
+This software runs on top of the **Erika Enterprise RTOS** developed by Evidence Srl.
 The helmet's firmware provides the user interface and the communication over Bluetooth.
 
 ## ProHelmetApp: Android Application to perform an interactive demo
-This is a simple demo application whose purpuse is to demostrate what can be done with the helmet.
+This is a simple Android application whose purpuse is to demostrate what can be done with the helmet.
+Requirments:
+* Android 4.4 - **API 23**
+* Access to **Bluetooth** and **Fine Location**
 
 ## Licence
 This project is distributed under GNU v3
