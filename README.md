@@ -16,5 +16,8 @@ The basic idea is that the helmet constantly communicates with the driver's smar
 * Android 4.4 - **API 23**
 * Access to **Bluetooth** and **Fine Location**
 
+## bin: binary builds
+Here there are the latest builds of the ProHelmet's firmware (targeting STM32F429-DISCOVERY) and the Android application's apk.
+
 ## Licence
 This project is distributed under GNU v3
